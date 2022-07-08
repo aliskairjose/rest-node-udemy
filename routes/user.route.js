@@ -2,8 +2,7 @@ import { Router } from "express";
 import { check } from "express-validator";
 import { UserController } from "../controllers/user.controller.js";
 import { validateField } from "../middlewares/validate-field.js";
-import Role from '../models/role.js'
-
+import { validateRole } from "../helpers/db-validators.js";
 export class User {
   constructor() {
     this.router = Router()
@@ -21,13 +20,7 @@ export class User {
       check('email', 'El email es obligatorio').notEmpty(),
       check('password', 'El password es obligatorio').notEmpty(),
       check('password', 'El password es debe tener al menos 6 caracteres').isLength({ min: 6 }),
-      check('role').custom(async (role = '') => {
-        const exist = await Role.findOne({ role })
-
-        if (!exist) {
-          throw new Error(`El role ${role} no esta registrado en la DB`)
-        }
-      }),
+      check('role').custom(validateRole),
       // check('role', 'El role no es permitido').isIn(['ADMIN_ROLE', 'USER_ROLE']),
       validateField
     ], this.user.post)
