@@ -1,4 +1,5 @@
 import mongoose from "mongoose"
+if (process.env.NODE_ENV === 'production') dotenv.config();
 
 export const dbConnection = async () => {
   try {
