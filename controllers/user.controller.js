@@ -4,35 +4,36 @@ import bcrypt from 'bcryptjs'
 export class UserController {
   constructor() { }
 
-  get = (req = request, res = response) => {
-    const { query, params } = req
+  get = async (req = request, res = response) => {
+
+    const { from = 0, limit = 5 } = req.query
+
+    const [users, total] = await Promise.all([
+      User.find({ state: true }).skip(from).limit(limit),
+      User.countDocuments({ state: true })
+    ])
+
     res.json({
-      body: { query, params },
-      msg: 'get API - Controller'
+      msg: 'get API - Controllersss',
+      body: users,
+      total
     })
   }
 
-  list = (req = request, res = response) => {
+  getbyId = async (req = request, res = response) => {
+    const { id } = req.params
+    const user = await User.findOne({ _id: id })
+    console.log({ user, id });
     res.json({
-      msg: 'get list API - Controller'
+      body: user,
+      msg: 'getById API - Controller'
     })
   }
 
   post = async (req = request, res = response) => {
 
     const { name, password, role, email } = req.body
-
     const user = new User({ name, email, password, role })
-
-
-    // Verificar si email ya existe
-    const exist = await User.findOne({ email })
-
-    if (exist) {
-      return res.status(400).json({
-        msg: 'El correo ya existe'
-      })
-    }
 
     // Encriptar password
     const salt = bcrypt.genSaltSync()
@@ -46,11 +47,22 @@ export class UserController {
     })
   }
 
-  put = (req = request, res = response) => {
+  put = async (req = request, res = response) => {
     // Id esta definido en la ruta  this.router.put('/:id', this.user.put)
     const { id } = req.params
+
+    const { _id, password, google, email, ...rest } = req.body
+
+    if (password) {
+      // Encriptar password
+      const salt = bcrypt.genSaltSync()
+      rest.password = bcrypt.hashSync(password, salt)
+    }
+
+    const user = await User.findByIdAndUpdate(id, rest)
+
     res.json({
-      body: id,
+      body: user,
       msg: 'put API - Controller'
     })
   }
@@ -61,11 +73,17 @@ export class UserController {
     })
   }
 
-  delete = (req, res = response) => {
+  delete = async (req, res = response) => {
     // Id esta definido en la ruta  this.router.put('/:id', this.user.put)
     const { id } = req.params
+    // Borrado fisico, no recomendado
+    // const user = await User.findByIdAndDelete(id)
+
+    // Borrado logico, mas recomendado
+    const user = await User.findByIdAndUpdate(id, { state: false })
+
     res.json({
-      body: id,
+      body: user,
       msg: 'delete API - Controller'
     })
   }

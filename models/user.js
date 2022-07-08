@@ -36,6 +36,15 @@ const UserSchema = new Schema(
   }
 )
 
+/**
+ * ? Sobreescribimos el metodo toJSON y eliminamos __v y password de la respuesta desestructurando el objeto
+ * ? y retornando el resto de las propiedades, con el this.toObject, y para esto debemos usar function y no una funcion de flecha
+ */
+UserSchema.method('toJSON', function () {
+  const { __v, password, ...rest } = this.toObject()
+  return rest
+})
+
 const User = model('User', UserSchema)
 
 export default User
