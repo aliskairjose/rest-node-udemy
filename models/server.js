@@ -4,6 +4,7 @@ import dotenv from 'dotenv'
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { User } from '../routes/user.route.js';
+import { dbConnection } from '../database/config.js';
 
 if (process.env.NODE_ENV !== 'production') dotenv.config();
 
@@ -14,6 +15,10 @@ export class Server {
     this.app = express();
     this.port = process.env.PORT;
     this.user = new User()
+
+    // Connect to DB
+    this.dbConn()
+
     // Middlewares
     this.middlewares()
 
@@ -38,5 +43,9 @@ export class Server {
 
     // Directorio publico
     this.app.use(express.static('public'))
+  }
+
+  async dbConn () {
+    await dbConnection()
   }
 }
