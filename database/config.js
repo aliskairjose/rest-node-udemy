@@ -3,7 +3,7 @@ if (process.env.NODE_ENV === 'production') dotenv.config();
 
 export const dbConnection = async () => {
   try {
-    const conn = await mongoose.connect(process.env.MONGODB)
+    mongoose.connect(process.env.MONGODB)
     console.log('Database online')
   } catch (error) {
     console.error(error)
