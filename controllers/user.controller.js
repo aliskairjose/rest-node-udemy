@@ -83,7 +83,7 @@ export class UserController {
 
 
     res.json({
-      body: { uid, user },
+      body: { id, user },
       msg: 'delete API - Controller'
     })
   }

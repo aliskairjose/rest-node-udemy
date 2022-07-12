@@ -4,6 +4,7 @@ import { UserController } from "../controllers/user.controller.js";
 import { validateField } from "../middlewares/validate-field.js";
 import { emailExist, validateRole, validateUserId } from "../helpers/db-validators.js";
 import { validateJWT } from "../middlewares/validate-jwt.js";
+import { hasRole, isAdmin } from "../middlewares/validate-role.js";
 export class User {
   constructor() {
     this.router = Router()
@@ -38,6 +39,8 @@ export class User {
 
     this.router.delete('/:id', [
       validateJWT,
+      // isAdmin,
+      hasRole('ADMIN_ROLE', 'SALE_ROLE'),
       check('id', 'No es un id valido').isMongoId(),
       check('id').custom(validateUserId),
       validateField
