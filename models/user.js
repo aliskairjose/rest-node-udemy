@@ -41,7 +41,8 @@ const UserSchema = new Schema(
  * ? y retornando el resto de las propiedades, con el this.toObject, y para esto debemos usar function y no una funcion de flecha
  */
 UserSchema.method('toJSON', function () {
-  const { __v, password, ...rest } = this.toObject()
+  const { __v, password, _id, ...rest } = this.toObject()
+  rest.uid = _id
   return rest
 })
 

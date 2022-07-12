@@ -5,6 +5,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { User } from '../routes/user.route.js';
 import { dbConnection } from '../database/config.js';
+import { AuthRoute } from '../routes/auth.route.js';
 
 if (process.env.NODE_ENV !== 'production') dotenv.config();
 
@@ -15,6 +16,7 @@ export class Server {
     this.app = express();
     this.port = process.env.PORT;
     this.user = new User()
+    this.authRoute = new AuthRoute()
 
     // Connect to DB
     this.dbConn()
@@ -31,6 +33,7 @@ export class Server {
   }
 
   routes () {
+    this.app.use('/api/auth', this.authRoute.router)
     this.app.use('/api/user', this.user.router)
   }
 

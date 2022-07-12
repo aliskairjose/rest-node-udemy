@@ -23,7 +23,6 @@ export class UserController {
   getbyId = async (req = request, res = response) => {
     const { id } = req.params
     const user = await User.findOne({ _id: id })
-    console.log({ user, id });
     res.json({
       body: user,
       msg: 'getById API - Controller'
@@ -47,7 +46,7 @@ export class UserController {
     })
   }
 
-  put = async (req = request, res = response) => {
+  update = async (req = request, res = response) => {
     // Id esta definido en la ruta  this.router.put('/:id', this.user.put)
     const { id } = req.params
 
@@ -76,14 +75,15 @@ export class UserController {
   delete = async (req, res = response) => {
     // Id esta definido en la ruta  this.router.put('/:id', this.user.put)
     const { id } = req.params
-    // Borrado fisico, no recomendado
-    // const user = await User.findByIdAndDelete(id)
 
-    // Borrado logico, mas recomendado
-    const user = await User.findByIdAndUpdate(id, { state: false })
+    // Borrado logico, mas recomendado, returnOriginal false para que devuelva el objeto actualizado, 
+    // si no trae el anterior a la actualizacion
+    const user = await User.findByIdAndUpdate(id, { state: false }, { returnOriginal: false })
+    const authUser = req.user
+
 
     res.json({
-      body: user,
+      body: { uid, user },
       msg: 'delete API - Controller'
     })
   }

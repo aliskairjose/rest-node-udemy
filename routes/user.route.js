@@ -3,25 +3,26 @@ import { check } from "express-validator";
 import { UserController } from "../controllers/user.controller.js";
 import { validateField } from "../middlewares/validate-field.js";
 import { emailExist, validateRole, validateUserId } from "../helpers/db-validators.js";
+import { validateJWT } from "../middlewares/validate-jwt.js";
 export class User {
   constructor() {
     this.router = Router()
-    this.user = new UserController
+    this.userCtrl = new UserController
 
-    this.router.get('/', this.user.get)
+    this.router.get('/', this.userCtrl.get)
 
     this.router.get('/:id', [
       check('id', 'No es un id valido').isMongoId(),
       check('id').custom(validateUserId),
       validateField
-    ], this.user.getbyId)
+    ], this.userCtrl.getbyId)
 
     this.router.put('/:id', [
       check('id', 'No es un id valido').isMongoId(),
       check('id').custom(validateUserId),
       check('role').custom(validateRole),
       validateField
-    ], this.user.put)
+    ], this.userCtrl.update)
 
     this.router.post('/', [
       check('name', 'El nombre es obligatorio').notEmpty(),
@@ -33,15 +34,16 @@ export class User {
       check('role').custom(validateRole),
       // check('role', 'El role no es permitido').isIn(['ADMIN_ROLE', 'USER_ROLE']),
       validateField
-    ], this.user.post)
+    ], this.userCtrl.post)
 
     this.router.delete('/:id', [
+      validateJWT,
       check('id', 'No es un id valido').isMongoId(),
       check('id').custom(validateUserId),
       validateField
-    ], this.user.delete)
+    ], this.userCtrl.delete)
 
-    this.router.patch('/', this.user.patch)
+    this.router.patch('/', this.userCtrl.patch)
   }
 
 
