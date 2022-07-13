@@ -1,10 +1,12 @@
 import { Router } from "express";
 import { check } from "express-validator";
 import { UserController } from "../controllers/user.controller.js";
-import { validateField } from "../middlewares/validate-field.js";
 import { emailExist, validateRole, validateUserId } from "../helpers/db-validators.js";
-import { validateJWT } from "../middlewares/validate-jwt.js";
-import { hasRole, isAdmin } from "../middlewares/validate-role.js";
+import {
+  validateFields,
+  validateJwt,
+  validateRoles
+} from '../middlewares/index.js'
 export class User {
   constructor() {
     this.router = Router()
@@ -15,14 +17,14 @@ export class User {
     this.router.get('/:id', [
       check('id', 'No es un id valido').isMongoId(),
       check('id').custom(validateUserId),
-      validateField
+      validateFields
     ], this.userCtrl.getbyId)
 
     this.router.put('/:id', [
       check('id', 'No es un id valido').isMongoId(),
       check('id').custom(validateUserId),
       check('role').custom(validateRole),
-      validateField
+      validateFields
     ], this.userCtrl.update)
 
     this.router.post('/', [
@@ -34,16 +36,16 @@ export class User {
       check('password', 'El password es debe tener al menos 6 caracteres').isLength({ min: 6 }),
       check('role').custom(validateRole),
       // check('role', 'El role no es permitido').isIn(['ADMIN_ROLE', 'USER_ROLE']),
-      validateField
+      validateFields
     ], this.userCtrl.post)
 
     this.router.delete('/:id', [
-      validateJWT,
+      validateJwt,
       // isAdmin,
-      hasRole('ADMIN_ROLE', 'SALE_ROLE'),
+      validateRoles.hasRole('ADMIN_ROLE', 'SALE_ROLE'),
       check('id', 'No es un id valido').isMongoId(),
       check('id').custom(validateUserId),
-      validateField
+      validateFields
     ], this.userCtrl.delete)
 
     this.router.patch('/', this.userCtrl.patch)
