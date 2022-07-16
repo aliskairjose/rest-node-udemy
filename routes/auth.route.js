@@ -16,6 +16,11 @@ export class AuthRoute {
       validateField
     ], this.authCtrl.login)
 
+    this.router.post('/google', [
+      check('id_token', 'Token de google obligatorio').notEmpty(),
+      validateField
+    ], this.authCtrl.googleSignIn)
+
     this.router.post('/register', this.authCtrl.register)
   }
 }
