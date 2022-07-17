@@ -1,6 +1,6 @@
 import { response, request } from "express"
 
-export const isAdmin = async (req = request, res = response) => {
+export const isAdmin = async (req = request, res = response, next) => {
 
   if (!req.user) {
     return res.status(500).json({

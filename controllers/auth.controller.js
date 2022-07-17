@@ -1,4 +1,4 @@
-import { response, request, json } from "express"
+import { response, request } from "express"
 import User from '../models/user.js'
 import bcrypt from 'bcryptjs'
 import { generateJWT } from "../helpers/jwt.js"

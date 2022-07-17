@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { check } from "express-validator";
 import { UserController } from "../controllers/user.controller.js";
-import { emailExist, validateRole, validateUserId } from "../helpers/db-validators.js";
+import { existEmail, validateRole, validateUserId } from "../helpers/db-validators.js";
 import {
   validateFields,
   validateJwt,
@@ -31,7 +31,7 @@ export class User {
       check('name', 'El nombre es obligatorio').notEmpty(),
       check('email', 'El email es inválido').isEmail(),
       check('email', 'El email es obligatorio').notEmpty(),
-      check('email').custom(emailExist),
+      check('email').custom(existEmail),
       check('password', 'El password es obligatorio').notEmpty(),
       check('password', 'El password es debe tener al menos 6 caracteres').isLength({ min: 6 }),
       check('role').custom(validateRole),

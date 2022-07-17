@@ -22,11 +22,20 @@ export class UserController {
 
   getbyId = async (req = request, res = response) => {
     const { id } = req.params
-    const user = await User.findOne({ _id: id })
-    res.json({
-      body: user,
-      msg: 'getById API - Controller'
-    })
+    try {
+
+      const user = await User.findById(id)
+
+      res.json({
+        body: user,
+        msg: 'getById API - Controller'
+      })
+    } catch (error) {
+      console.log(error)
+      res.status(500).json({
+        msg: 'Ha ocurrido un error, contacte con el administrador'
+      })
+    }
   }
 
   post = async (req = request, res = response) => {
@@ -58,7 +67,7 @@ export class UserController {
       rest.password = bcrypt.hashSync(password, salt)
     }
 
-    const user = await User.findByIdAndUpdate(id, rest)
+    const user = await User.findByIdAndUpdate(id, rest, { returnOriginal: false })
 
     res.json({
       body: user,
@@ -79,9 +88,6 @@ export class UserController {
     // Borrado logico, mas recomendado, returnOriginal false para que devuelva el objeto actualizado, 
     // si no trae el anterior a la actualizacion
     const user = await User.findByIdAndUpdate(id, { state: false }, { returnOriginal: false })
-    const authUser = req.user
-
-
     res.json({
       body: { id, user },
       msg: 'delete API - Controller'

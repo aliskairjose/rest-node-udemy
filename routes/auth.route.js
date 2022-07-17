@@ -2,7 +2,7 @@ import { Router } from "express";
 import { check } from "express-validator";
 import { AuthController } from "../controllers/auth.controller.js";
 import { validateField } from "../middlewares/validate-field.js";
-import { emailExist, validateRole, validateUserId } from "../helpers/db-validators.js";
+import { existEmail, validateRole, validateUserId } from "../helpers/db-validators.js";
 
 export class AuthRoute {
   constructor() {
