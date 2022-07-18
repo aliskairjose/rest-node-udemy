@@ -48,7 +48,6 @@ export class ProductController {
   }
 
   add = async (req = request, res = response) => {
-    // const name = req.body.name.toUpperCase()
     const { name, state, user, ...rest } = req.body
 
     const exist = await Product.findOne({ name })
@@ -65,12 +64,12 @@ export class ProductController {
       user: req.user._id,
       name: name.toUpperCase()
     }
-
     const product = await new Product(data)
     await product.save()
 
     res.status(201).json({
-      msg: `Se ha creado un nuevo producto: ${name}`
+      msg: `Se ha creado un nuevo producto: ${name}`,
+      body: product
     })
   }
 
@@ -103,13 +102,11 @@ export class ProductController {
   delete = async (req = request, res = response) => {
     const { id } = req.params
     try {
-      const product = await Product.findByIdAndUpdate(
-        id, {
+      const data = {
         state: false,
         user: req.user._id
-      },
-        { returnOriginal: false }
-      )
+      }
+      const product = await Product.findByIdAndUpdate(id, data, { returnOriginal: false })
         .populate('user', ['name', 'email'])
         .populate('category', 'name')
 

@@ -30,8 +30,9 @@ export class ProductRoute {
     this.router.post('/', [
       validateJwt,
       check('name', 'El nombre del producto es obligatorio').notEmpty(),
-      check('category', 'El id de la categoria no es valido').isMongoId,
-      check('id').custom(existCategory),
+      check('category', 'El id de la categoria es obligatoria').notEmpty(),
+      check('category', 'El id de la categoria no es valido').isMongoId(),
+      check('category').custom(existCategory),
       validateFields
     ], this.productCtrl.add)
 

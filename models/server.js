@@ -8,6 +8,7 @@ import { dbConnection } from '../database/config.js';
 import { AuthRoute } from '../routes/auth.route.js';
 import { CategoryRoute } from '../routes/category.route.js';
 import { ProductRoute } from '../routes/product.route.js';
+import { SearchRoute } from '../routes/search.route.js';
 
 if (process.env.NODE_ENV !== 'production') dotenv.config();
 
@@ -20,6 +21,7 @@ export class Server {
     this.authRoute = new AuthRoute()
     this.catRoute = new CategoryRoute()
     this.productRoute = new ProductRoute()
+    this.searchRoute = new SearchRoute()
 
     // Connect to DB
     this.dbConn()
@@ -40,6 +42,7 @@ export class Server {
     this.app.use('/api/user', this.user.router)
     this.app.use('/api/categories', this.catRoute.router)
     this.app.use('/api/products', this.productRoute.router)
+    this.app.use('/api/search', this.searchRoute.router)
   }
 
   middlewares () {

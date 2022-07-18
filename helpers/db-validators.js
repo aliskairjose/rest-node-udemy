@@ -29,6 +29,7 @@ export const validateUserId = async (id = '') => {
 }
 
 export const existCategory = async (id = '') => {
+  console.log('category validare')
   // Validamos que el id exista en la categoria
   const exist = await CategoryModel.findById(id)
   if (!exist) {

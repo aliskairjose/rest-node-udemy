@@ -54,10 +54,7 @@ export class CategoryController {
     }
 
     // Generar la data a guardar
-    const data = {
-      name,
-      user: req.user._id
-    }
+    const data = { name, user: req.user._id }
 
     const category = await new CategoryModel(data)
     await category.save()
@@ -95,14 +92,8 @@ export class CategoryController {
     const { id } = req.params
 
     try {
-      const category = await CategoryModel.findByIdAndUpdate(
-        id, {
-        state: false,
-        user: req.user._id
-      },
-        { returnOriginal: false }
-      ).populate('user', ['name', 'email'])
-
+      const data = { state: false, user: req.user._id }
+      const category = await CategoryModel.findByIdAndUpdate(id, data, { returnOriginal: false }).populate('user', ['name', 'email'])
 
       res.status(200).json({
         msg: 'Categoria eliminada',
