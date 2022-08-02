@@ -18,7 +18,15 @@ export class UploadRoute {
       check('id', 'Debe ser un id valido mongodb').isMongoId(),
       check('collection').custom(c => allowedCollections(c, ['users', 'products'])),
       validateField
-    ], this.uploadCtrl.updateImage)
+    ], this.uploadCtrl.uploadCloudinary)
+    // ], this.uploadCtrl.updateImage)
+
+    this.router.get('/:collection/:id',
+      [
+        check('id', 'Debe ser un id valido mongodb').isMongoId(),
+        check('collection').custom(c => allowedCollections(c, ['users', 'products'])),
+        validateField
+      ], this.uploadCtrl.showImage)
 
   }
 }
