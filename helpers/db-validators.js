@@ -43,3 +43,14 @@ export const existProduct = async (id = '') => {
     throw new Error('El id del producto no existe en la db')
   }
 }
+
+/**
+ * Validar colleciones permitidas
+ */
+export const allowedCollections = (collection = '', collections = []) => {
+  const include = collections.includes(collection)
+  if (!include) {
+    throw new Error(`La colleción no esta permitida, ${collections}`)
+  }
+  return true
+}

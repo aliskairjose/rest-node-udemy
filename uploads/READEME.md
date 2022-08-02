@@ -1,0 +1,3 @@
+# Nota
+
+Archivos al git
