@@ -148,7 +148,10 @@ export class UploadController {
     try {
       if (model.img) {
         // Hay que borrar la imagen de cloudinary
-
+        const nameArr = model.img.split('/')
+        const name = nameArr.slice(-1)
+        const [public_id] = name.toString().split('.')
+        cloudinary.uploader.destroy(public_id)
       }
 
       const { tempFilePath } = req.files.archivo
